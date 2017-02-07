@@ -145,17 +145,14 @@ contract('Congress', function(accounts) {
         let curProposalState = await congress.proposals(0);
 
         // increase time for 10 minutes, more then minutesForDebate (5)
-        let incrTime = await new Promise((resolve, reject) => {
+        await new Promise((resolve, reject) =>
             web3.currentProvider.sendAsync({
                 jsonrpc: "2.0",
                 method: "evm_increaseTime",
                 params: [10 * 600],
                 id: new Date().getTime()
-            }, (error, result) => {
-                return error ? reject(error) : resolve(result.result);
-            });
-
-        });
+            }, (error, result) => error ? reject(error) : resolve(result.result))
+        );
 
         //check that we are ready for execute proposal
         assert.equal(curProposalState[PROPOSAL_EXECUTED_FIELD], false, 'proposal not yet executed');
